@@ -107,10 +107,9 @@ describe('Ao chamar o controller findById', () => {
       response.json = sinon.stub().returns();
 
       sinon.stub(SaleControllers, 'findById').resolves({
-        id: 1,
-        a,
-        b,
-        c,
+        data: "2022-02-23T17:48:00.000Z",
+        productID: 1,
+        quantity: 5,
       });
     });
 
