@@ -2,10 +2,12 @@ const express = require('express');
 
 const router = express.Router();
 
-const { getAll, findById } = require('../controllers/salesController');
+const { getAll, findById, create } = require('../controllers/salesController');
 
 router.get('/', getAll);
 
 router.get('/:id', findById);
+
+router.post('/', create);
 
 module.exports = router;

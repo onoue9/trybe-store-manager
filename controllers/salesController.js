@@ -21,4 +21,12 @@ const findById = async (req, res) => {
   }
 };
 
-module.exports = { getAll, findById };
+const create = async (req, res) => {
+  const { productId, quantity } = req.body;
+  const sale = await SalesService.create({ productId, quantity });
+  if (sale.status) return res.status(sale.status).json({ message: sale.message });
+
+  res.status(201).json(sale);
+};
+
+module.exports = { getAll, findById, create };

@@ -33,4 +33,22 @@ const findById = async (id) => {
   return serializedResult;
 };
 
-module.exports = { getAll, findById };
+const create = async ({ productId, quantity }) => {
+  const [sales] = await connection.execute('INSERT INTO StoreManager.sales VALUES()');
+  await connection.execute(
+    'INSERT INTO StoreManager.sales_products VALUES (?, ?, ?);',
+    [sales.insertId, productId, quantity],
+  );
+
+  return {
+    id: sales.insertId,
+    itemsSold: [
+      {
+        productId,
+        quantity,
+      },
+    ],
+  };
+};
+
+module.exports = { getAll, findById, create };

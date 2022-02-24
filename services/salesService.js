@@ -14,4 +14,32 @@ const findById = async (id) => {
   return sale;
 };
 
-module.exports = { getAll, findById };
+const productIdValidate = (productId) => {
+  if (!productId || productId === '') return { message: '"productId" is required', status: '400' };
+  return true;
+};
+
+const quantityValidate = (quantity) => {
+  if (!quantity || quantity === '') return { message: '"quantity" is required', status: 400 };
+  if (parseInt(quantity, 0) < 1) {
+    return {
+      message: '"quantity" must be greater than or equal to 1',
+      status: 422,
+    };
+  }
+  return true;
+};
+
+const create = async ({ productId, quantity }) => {
+  const isValidProductId = productIdValidate(productId);
+  const isValidQuantity = quantityValidate(quantity);
+
+  if (isValidProductId.status) return isValidProductId;
+  if (isValidQuantity.status) return isValidQuantity;
+
+  const sale = await SalesModels.create({ productId, quantity });
+
+  return sale;
+};
+
+module.exports = { getAll, findById, create };
