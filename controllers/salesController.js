@@ -23,8 +23,10 @@ const findById = async (req, res) => {
 
 const create = async (req, res) => {
   const datas = req.body;
-  const [sale] = await SalesService.create(datas);
-  if (sale.status) return res.status(sale.status).json({ message: sale.message });
+  const sale = await SalesService.create(datas);
+  if (!sale.id) {
+    return res.status(sale[0].status).json({ message: sale[0].message });
+  }
 
   res.status(201).json(sale);
 };
