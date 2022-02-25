@@ -27,13 +27,13 @@ const nameValidate = (name) => {
 };
 
 const quantityValidate = (quantity) => {
-  if (!quantity || quantity === '') return { message: '"quantity" is required', status: 400 };
   if (parseInt(quantity, 0) < 1) {
     return {
       message: '"quantity" must be greater than or equal to 1',
       status: 422,
     };
   }
+  if (!quantity || quantity === '') return { message: '"quantity" is required', status: 400 };
   return true;
 };
 
@@ -62,6 +62,21 @@ const findByName = async (name) => {
   return product;
 };
 
+const update = async ({ id, name, quantity }) => {
+  const isValidName = nameValidate(name);
+  const isValidQuantity = quantityValidate(quantity);
+
+  if (isValidName.status) return isValidName;
+  if (isValidQuantity.status) return isValidQuantity;
+
+  const isIdExists = await ProductsModels.findById(id);
+  if (!isIdExists) return ({ message: 'Product not found', status: 404 });
+
+  const product = await ProductsModels.update({ id, name, quantity });
+
+  return product;
+};
+
 module.exports = {
   getAll,
   findById,
@@ -69,4 +84,5 @@ module.exports = {
   quantityValidate,
   create,
   findByName,
+  update,
 };
