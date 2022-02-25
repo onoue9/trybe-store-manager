@@ -33,21 +33,22 @@ const findById = async (id) => {
   return serializedResult;
 };
 
-const create = async ({ productId, quantity }) => {
+const create = async (datas) => {
   const [sales] = await connection.execute('INSERT INTO StoreManager.sales VALUES()');
-  await connection.execute(
-    'INSERT INTO StoreManager.sales_products VALUES (?, ?, ?);',
-    [sales.insertId, productId, quantity],
-  );
+  datas.forEach(async (data) => {
+    await connection.execute(
+      'INSERT INTO StoreManager.sales_products VALUES (?, ?, ?);',
+      [sales.insertId, data.productId, data.quantity],
+    );
+  });
+  const [result] = await connection.execute(
+    'SELECT product_id, quantity FROM StoreManager.sales_products WHERE sale_id = ?',
+    [sales.insertId],
+    );
 
   return {
     id: sales.insertId,
-    itemsSold: [
-      {
-        productId,
-        quantity,
-      },
-    ],
+    itemsSold: result,
   };
 };
 

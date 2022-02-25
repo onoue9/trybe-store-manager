@@ -30,14 +30,16 @@ const quantityValidate = (quantity) => {
   return true;
 };
 
-const create = async ({ productId, quantity }) => {
-  const isValidProductId = productIdValidate(productId);
-  const isValidQuantity = quantityValidate(quantity);
+const create = async (datas) => {
+  datas.forEach((data) => {
+  const isValidProductId = productIdValidate(data.productId);
+  const isValidQuantity = quantityValidate(data.quantity);
 
   if (isValidProductId.status) return isValidProductId;
   if (isValidQuantity.status) return isValidQuantity;
+});
 
-  const sale = await SalesModels.create({ productId, quantity });
+  const sale = await SalesModels.create(datas);
 
   return sale;
 };

@@ -44,9 +44,29 @@ const create = async ({ name, quantity }) => {
   if (isValidName.status) return isValidName;
   if (isValidQuantity.status) return isValidQuantity;
 
-  const { id } = await ProductsModels.create({ name, quantity });
+  const nameExists = await ProductsModels.isNameExists(name);
+  if (nameExists) return { message: 'Product already exists', status: 409 };
 
-  return { id };
+  const product = await ProductsModels.create({ name, quantity });
+
+  return product;
 };
 
-module.exports = { getAll, findById, nameValidate, quantityValidate, create };
+const findByName = async (name) => {
+  const isValidName = nameValidate(name);
+
+  if (isValidName.status) return isValidName;
+
+  const product = await ProductsModels.isNameExists(name);
+
+  return product;
+};
+
+module.exports = {
+  getAll,
+  findById,
+  nameValidate,
+  quantityValidate,
+  create,
+  findByName,
+};

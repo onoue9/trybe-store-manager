@@ -22,8 +22,8 @@ const findById = async (req, res) => {
 };
 
 const create = async (req, res) => {
-  const { productId, quantity } = req.body;
-  const sale = await SalesService.create({ productId, quantity });
+  const datas = req.body;
+  const sale = await SalesService.create(datas);
   if (sale.status) return res.status(sale.status).json({ message: sale.message });
 
   res.status(201).json(sale);
