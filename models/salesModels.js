@@ -48,4 +48,31 @@ const create = async (datas) => {
   };
 };
 
-module.exports = { getAll, findById, create };
+const update = async ({ id, productId, quantity }) => {
+  const [result] = await connection.execute(
+    'UPDATE StoreManager.sales_products SET product_id = ?, quantity = ? WHERE sale_id = ?;',
+    [productId, quantity, id],
+  );
+
+  if (result.length === 0) return null;
+
+  return {
+    saleId: id,
+    itemUpdated: {
+      productId,
+      quantity,
+    },
+  };
+};
+
+const deleteSale = async ({ id }) => {
+  const [result] = await connection.execute(
+    'DELETE FROM StoreManager.sales_products WHERE sale_id = ?;', [id],
+  );
+
+  if (result.length === 0) return null;
+
+  return result;
+};
+
+module.exports = { getAll, findById, create, update, deleteSale };

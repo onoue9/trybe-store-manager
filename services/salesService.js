@@ -15,7 +15,7 @@ const findById = async (id) => {
 };
 
 const productIdValidate = (productId) => {
-  if (!productId || productId === '') return { message: '"productId" is required', status: '400' };
+  if (!productId || productId === '') return { message: '"productId" is required', status: 400 };
   return true;
 };
 
@@ -44,4 +44,28 @@ const create = async (datas) => {
   return sale;
 };
 
-module.exports = { getAll, findById, create };
+const update = async ({ id, productId, quantity }) => {
+  const isValidProductId = productIdValidate(productId);
+  const isValidQuantity = quantityValidate(quantity);
+
+  if (isValidProductId.status) return isValidProductId;
+  if (isValidQuantity.status) return isValidQuantity;
+
+  const isIdExists = await SalesModels.findById(id);
+  if (!isIdExists) return ({ message: 'Sale not found', status: 404 });
+
+  const sales = await SalesModels.update({ id, productId, quantity });
+
+  return sales;
+};
+
+const deleteSale = async ({ id }) => {
+  const isIdExists = await SalesModels.findById(id);
+  if (!isIdExists) return ({ message: 'Sale not found', status: 404 });
+
+  const product = await SalesModels.deleteSale({ id });
+
+  return product;
+};
+
+module.exports = { getAll, findById, create, update, deleteSale };
