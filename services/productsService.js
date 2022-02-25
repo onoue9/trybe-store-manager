@@ -77,6 +77,15 @@ const update = async ({ id, name, quantity }) => {
   return product;
 };
 
+const deleteProduct = async ({ id }) => {
+  const isIdExists = await ProductsModels.findById(id);
+  if (!isIdExists) return ({ message: 'Product not found', status: 404 });
+
+  const product = await ProductsModels.deleteProduct({ id });
+
+  return product;
+};
+
 module.exports = {
   getAll,
   findById,
@@ -85,4 +94,5 @@ module.exports = {
   create,
   findByName,
   update,
+  deleteProduct,
 };
