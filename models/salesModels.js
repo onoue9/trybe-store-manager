@@ -56,13 +56,17 @@ const update = async ({ id, productId, quantity }) => {
 
   if (result.length === 0) return null;
 
-  return {
-    saleId: id,
-    itemUpdated: {
-      productId,
-      quantity,
-    },
-  };
+  const res = {
+      saleId: id,
+      itemUpdated: [
+        {
+          productId,
+          quantity,
+        },
+      ],
+    };
+
+  return res;
 };
 
 const deleteSale = async ({ id }) => {
