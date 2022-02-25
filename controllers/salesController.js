@@ -23,7 +23,7 @@ const findById = async (req, res) => {
 
 const create = async (req, res) => {
   const datas = req.body;
-  const sale = await SalesService.create(datas);
+  const [sale] = await SalesService.create(datas);
   if (sale.status) return res.status(sale.status).json({ message: sale.message });
 
   res.status(201).json(sale);
@@ -31,7 +31,7 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
   const { id } = req.params;
-  const { productId, quantity } = req.body;
+  const { productId, quantity } = req.body[0];
   const sales = await SalesService.update({ id, productId, quantity });
   if (sales.status) return res.status(sales.status).json({ message: sales.message });
 

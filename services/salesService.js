@@ -20,24 +20,28 @@ const productIdValidate = (productId) => {
 };
 
 const quantityValidate = (quantity) => {
-  if (!quantity || quantity === '') return { message: '"quantity" is required', status: 400 };
   if (parseInt(quantity, 0) < 1) {
     return {
       message: '"quantity" must be greater than or equal to 1',
       status: 422,
     };
   }
+  if (!quantity || quantity === '') return { message: '"quantity" is required', status: 400 };
   return true;
 };
 
 const create = async (datas) => {
-  datas.forEach((data) => {
-  const isValidProductId = productIdValidate(data.productId);
-  const isValidQuantity = quantityValidate(data.quantity);
+  const res = datas.map((data) => {
+    const isValidProductId = productIdValidate(data.productId);
+    const isValidQuantity = quantityValidate(data.quantity);
+    let result = '';
 
-  if (isValidProductId.status) return isValidProductId;
-  if (isValidQuantity.status) return isValidQuantity;
-});
+    if (isValidProductId.status) { result = isValidProductId; }
+    if (isValidQuantity.status) { result = isValidQuantity; }
+
+    return result;
+  });
+  if (res[0].status) return res;
 
   const sale = await SalesModels.create(datas);
 
@@ -48,8 +52,8 @@ const update = async ({ id, productId, quantity }) => {
   const isValidProductId = productIdValidate(productId);
   const isValidQuantity = quantityValidate(quantity);
 
-  if (isValidProductId.status) return isValidProductId;
   if (isValidQuantity.status) return isValidQuantity;
+  if (isValidProductId.status) return isValidProductId;
 
   const isIdExists = await SalesModels.findById(id);
   if (!isIdExists) return ({ message: 'Sale not found', status: 404 });

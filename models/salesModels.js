@@ -36,7 +36,7 @@ const findById = async (id) => {
 const create = async (datas) => {
   const [sales] = await connection.execute('INSERT INTO StoreManager.sales VALUES()');
   datas.map(async (data) => {
-   await connection.execute(
+    await connection.execute(
       'INSERT INTO StoreManager.sales_products VALUES (?, ?, ?);',
       [sales.insertId, data.productId, data.quantity],
     );
