@@ -50,7 +50,7 @@ describe("11-updateQuantity", () => {
           insertedId = json.id;
         });
 
-      await frisby
+        await frisby
         .get(`${url}/products/1`)
         .expect("status", 200)
         .then((response) => {
@@ -58,7 +58,7 @@ describe("11-updateQuantity", () => {
 
           expect(json.quantity).toBe(5);
         });
-    });
+      });
 
     it("Será validado que é possível atualizar a quantidade do produto ao deletar uma compra", async () => {
       await frisby

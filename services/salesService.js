@@ -67,6 +67,10 @@ const deleteSale = async ({ id }) => {
   const isIdExists = await SalesModels.findById(id);
   if (!isIdExists) return ({ message: 'Sale not found', status: 404 });
 
+  const getProduct = await SalesModels.findById(id);
+
+  SalesModels.updateProductsQuantity(getProduct, { id });
+
   const product = await SalesModels.deleteSale({ id });
 
   return product;

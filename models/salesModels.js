@@ -40,8 +40,11 @@ const create = async (datas) => {
       'INSERT INTO StoreManager.sales_products VALUES (?, ?, ?);',
       [sales.insertId, data.productId, data.quantity],
     );
+    await connection.execute(
+      'UPDATE StoreManager.products SET quantity = (quantity - ?) WHERE id = ?;',
+      [data.quantity, data.productId],
+    );
   });
-
   return {
     id: sales.insertId,
     itemsSold: datas,
@@ -70,13 +73,41 @@ const update = async ({ id, productId, quantity }) => {
 };
 
 const deleteSale = async ({ id }) => {
+  const [sales] = await connection.execute(
+    'SELECT product_id, quantity FROM StoreManager.sales_products WHERE sale_id = ?;', [id],
+  );
   const [result] = await connection.execute(
     'DELETE FROM StoreManager.sales_products WHERE sale_id = ?;', [id],
-  );
+    );
+  await connection.execute(
+    'DELETE FROM StoreManager.sales WHERE id = ?;', [id],
+    );
 
   if (result.length === 0) return null;
 
-  return result;
+  return sales;
 };
 
-module.exports = { getAll, findById, create, update, deleteSale };
+const updateProductsQuantity = async (products, { id }) => {
+  products.map(async (prod) => {
+  const product = await connection.execute(
+    'SELECT * FROM StoreManager.products WHERE id = ?', [prod.productId],
+  );
+  const saleQuantity = await connection.execute(
+    'SELECT * FROM StoreManager.sales_products WHERE sale_id = ?', [id],
+  );
+  await connection.execute(
+    'UPDATE StoreManager.products SET quantity = (quantity + ?) WHERE id = ?',
+    [saleQuantity[0][0].quantity, product[0][0].id],
+  );
+  });
+};
+
+module.exports = {
+  getAll,
+  findById,
+  create,
+  update,
+  deleteSale,
+  updateProductsQuantity,
+ };
