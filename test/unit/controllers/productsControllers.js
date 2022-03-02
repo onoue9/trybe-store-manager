@@ -1,143 +1,179 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
+const e = require('express');
+const req = require('express/lib/request');
+const res = require('express/lib/response');
 
-const ProductControllers = require('../../../controllers/productsController');
+productController = require('../../../controllers/productsController');
+productService = require('../../../services/productsService');
 
-describe('Ao chamar o controller getAll', () => {
-  describe('quando não existem produtos no banco de dados', async () => {
-    const response = {};
-    const request = {};
+const getAllReturn = [
+  {
+      "id": 1,
+      "name": "Martelo de Thor",
+      "quantity": 9
+  },
+  {
+      "id": 2,
+      "name": "Traje de encolhimento",
+      "quantity": 20
+  },
+  {
+      "id": 3,
+      "name": "Escudo do Capitão América",
+      "quantity": 30
+  }
+];
 
+const findByIdReturn = {
+  "id": "1",
+  "name": "Martelo de Thor",
+  "quantity": 9
+};
+
+const createReturn = {
+  "id": 4,
+  "name": "produto",
+  "quantity": 100
+};
+
+const updateReturn = {
+  "id": "4",
+  "name": "produto",
+  "quantity": 150
+};
+
+describe('Testa as funções de productsController', () => {
+  const request = {};
+  const response = {};
+
+  describe('função getAll', () => {
     before(() => {
       response.status = sinon.stub().returns(response);
       response.json = sinon.stub().returns();
 
-      sinon.stub(ProductControllers, 'getAll').resolves({});
+      sinon.stub(productService, 'getAll').returns(getAllReturn);
     });
 
     after(() => {
-      ProductControllers.getAll.restore();
-    });
+      productService.getAll.restore();
+    })
 
-    if('é chamado o status com código 404', async () => {
-      await ProductControllers.getAll(request, response);
-
-      expect(response.status.calledWith(404)).to.be.equal(true);
-    });
-
-    if('é chamado o json com um array vazio', async () => {
-      await ProductControllers.getAll(request, response);
-
-      expect(response.json.calledWith([])).to.be.equal(true);
-    });
-  });
-
-  describe('quando existem produtos no banco de dados', async () => {
-    const response = {};
-    const request = {};
-
-    before(() => {
-      response.status = sinon.stub().returns(response);
-      response.json = sinon.stub().returns();
-
-      sinon.stub(ProductControllers, 'getAll').resolves([
-        {
-          "id": 1,
-          "name": "produto A",
-          "quantity": 10
-        },
-        {
-          "id": 2,
-          "name": "produto B",
-          "quantity": 20
-        }
-      ]);
-    });
-
-    after(() => {
-      ProductControllers.getAll.restore();
-    });
-
-    if('é chamado o status com código 200', async () => {
-      await ProductControllers.getAll(request, response);
+    it('verifica se getAll tem o status esperado', async () => {
+      await productController.getAll(request, response);
 
       expect(response.status.calledWith(200)).to.be.equal(true);
     });
 
-    if('é chamado o json com o array de produtos', async () => {
-      await ProductControllers.getAll(request, response);
+    it('verifica se o retorno de getAll é o esperado', async () => {
+      await productController.getAll(request, response);
 
-      expect(response.json.calledWith(sinon.match.array)).to.be.equal(true);
-    });
+      expect(response.json.calledWith(getAllReturn)).to.be.equal(true);
+    })
   });
-});
 
-describe('Ao chamar o controller findById', () => {
-  describe('quando não existem produtos no banco de dados', async () => {
-    const response = {};
-    const request = {};
-
+  describe('função findById', () => {
     before(() => {
-      request.params = {
-        id: 1
-      };
-
+      request.params = sinon.stub().returns({ id: 1 });
       response.status = sinon.stub().returns(response);
       response.json = sinon.stub().returns();
 
-      sinon.stub(ProductControllers, 'findById').resolves(null);
+      sinon.stub(productService, 'findById').returns(findByIdReturn);
     });
 
     after(() => {
-      ProductControllers.findById.restore();
+      productService.findById.restore();
     });
 
-    if('é chamado o status com código 404', async () => {
-      await ProductControllers.findById(request, response);
-
-      expect(response.status.calledWith(404)).to.be.equal(true);
-    });
-
-    if('é chamado o json passando a mensagem "Product not found"', async () => {
-      await ProductControllers.findById(request, response);
-
-      expect(response.json.calledWith({ message: 'Product not found'})).to.be.equal(true);
-    });
-  });
-
-  describe('quando existem produtos no banco de dados', async () => {
-    const response = {};
-    const request = {};
-
-    before(() => {
-      request.params = {
-        id: 1,
-      };
-
-      response.status = sinon.stub().returns(response);
-      response.json = sinon.stub().returns();
-
-      sinon.stub(ProductControllers, 'findById').resolves({
-        id: 1,
-        name: 'produto A',
-        quantity: 20,
-      });
-    });
-
-    after(() => {
-      ProductControllers.findById.restore();
-    });
-
-    if('é chamado o status com código 200', async () => {
-      await ProductControllers.findById(request, response);
+    it('verifica se findById tem o status esperado', async () => {
+      await productController.findById(request, response);
 
       expect(response.status.calledWith(200)).to.be.equal(true);
     });
 
-    if('é chamado o json passando um objeto', async () => {
-      await ProductControllers.findById(request, response);
+    it('verifica se o retorno de findById é o esperado', async() => {
+      await productController.findById(request, response);
 
-      expect(response.json.calledWith(sinon.match.object)).to.be.equal(true);
+      expect(response.json.calledWith(findByIdReturn)).to.be.equal(true);
+    });
+  });
+
+  describe('função create', () => {
+    before(() => {
+      request.body = sinon.stub().returns({ "name": "produto", "quantity": 100 })
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(productService, 'create').returns(createReturn);
+    });
+
+    after(() => {
+      productService.create.restore();
+    });
+
+    it('verifica se create tem o status esperado', async () => {
+      await productController.create(request, response);
+
+      expect(response.status.calledWith(201)).to.be.equal(true);
+    });
+
+    it('verifica se o retorno de create é o esperado', async () => {
+      await productController.create(request, response);
+
+      expect(response.json.calledWith(createReturn)).to.be.equal(true);
+    });
+  });
+
+  describe('função update', () => {
+    before(() => {
+      request.params = sinon.stub().returns({ id: 4 });
+      request.body = sinon.stub().returns({ "name": "produto", "quantity": 150 });
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(productService, 'update').returns(updateReturn);
+    });
+
+    after(() => {
+      productService.update.restore();
+    });
+
+    it('verifica se update tem o status esperado', async () => {
+      await productController.update(request, response);
+
+      expect(response.status.calledWith(200)).to.be.equal(true);
+    });
+
+    it('verifica se update tem o retorno esperado', async () => {
+      await productController.update(request, response);
+
+      expect(response.json.calledWith(updateReturn)).to.be.equal(true);
+    });
+  });
+
+  describe('função deleteProduct', () => {
+    before(() => {
+      request.params = sinon.stub().returns({ id: 1 });
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+
+      sinon.stub(productService, 'deleteProduct').returns({});
+    });
+
+    after(() => {
+      productService.deleteProduct.restore();
+    });
+
+    it('verifica se deleteProduct tem o status esperado', async () => {
+      await productController.deleteProduct(request, response);
+
+      expect(response.status.calledWith(204)).to.be.equal(true);
+    });
+
+    it('verifica se deleteProduct tem o retorno esperado', async () => {
+      await productController.deleteProduct(request, response);
+
+      expect(response.json.calledWith()).to.be.equal(true);
     });
   });
 });

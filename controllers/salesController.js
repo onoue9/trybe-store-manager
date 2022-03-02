@@ -38,7 +38,7 @@ const update = async (req, res) => {
   if (sales.status) return res.status(sales.status).json({ message: sales.message });
 
   console.log(JSON.stringify(sales));
-  res.status(200).send(sales);
+  res.status(200).json(sales);
 };
 
 const deleteSale = async (req, res) => {
