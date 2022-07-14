@@ -1,4 +1,4 @@
-### Termos e acordos
+#### Termos e acordos
 
 Ao iniciar este projeto, você concorda com as diretrizes do Código de Ética e Conduta e do Manual da Pessoa Estudante da Trybe
 
@@ -217,7 +217,7 @@ Atenção :warning: Não rode o comando npm audit fix! Ele atualiza várias depe
 
 - Utilize o **mocha**, **chai** e **sinon** para escrever seus testes
 
-- Coloque todos os testes de `models`, `services` e `controllers` dentro da pasta `test/unit` 
+- Coloque todos os testes de `models`, `services` e `controllers` dentro da pasta `test/unit`
 
 **Nota**: É preciso criar a pasta `unit` dentro da pasta `test`.
 
@@ -225,17 +225,17 @@ Atenção :warning: Não rode o comando npm audit fix! Ele atualiza várias depe
 ```tree
 .
 ├─ ...
-├─ test                              
-│   └─ unit  
+├─ test
+│   └─ unit
 |       ├─ controllers
 │            ├─ productsControllers.js
-│            └─ salesControllers.js 
-|       ├─ services   
-│            ├─ productsServices.js            
-│            └─ salesServices.js 
+│            └─ salesControllers.js
+|       ├─ services
+│            ├─ productsServices.js
+│            └─ salesServices.js
 |       └─ models
-│            ├─ productsModels.js 
-│            └─ salesModels.js 
+│            ├─ productsModels.js
+│            └─ salesModels.js
 └─ ...
 ```
 **:warning: O nome dos arquivos de testes devem seguir essa estrutura `nomeDoArquivo.js` :warning:**
@@ -365,7 +365,7 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
   > :point_right: Será validado que a cobertura total das linhas dos arquivos nas pastas `models`, `services` e `controllers` é maior ou igual a 35%.
 
   > :point_right: Será validado que ao menos 24 linhas são cobertas pelos testes.
-  
+
 </details>
 
 ---
@@ -490,15 +490,15 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
 <details close>
   <summary>O que será validado</summary>
   <br>
-  
+
   > :point_right: Para o endpoint `POST /products`, o campo `name` deve ser uma _string_ com 5 ou mais caracteres e deve ser único.
-  - Quando a requisição é feita sem o atributo `name` :  
+  - Quando a requisição é feita sem o atributo `name` :
     ```json
       { "quantity": 100 }
     ```
     - sua API deve responder com status http `400` e o seguinte `body`:
     ```json
-      { "message": "\"name\" is required" }          
+      { "message": "\"name\" is required" }
     ```
   - Quando a requisição é feita e contém o seguinte `body`:
     ```json
@@ -506,7 +506,7 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
     ```
     - sua API deve responder com status http `422` e o seguinte `body`:
     ```json
-      { "message": "\"name\" length must be at least 5 characters long" }          
+      { "message": "\"name\" length must be at least 5 characters long" }
     ```
 
 
@@ -517,7 +517,7 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
     ```
     - sua API deve responder com status http `400` e o seguinte `body`:
     ``` json
-      { "message": "\"quantity\" is required" } 
+      { "message": "\"quantity\" is required" }
     ```
 
   - Quando a requisição é feita com o `quantity`  menor ou igual a 0:
@@ -529,7 +529,7 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
     ```
     - sua API deve responder com status http `422` e o seguinte `body`:
     ```json
-    { "message": "\"quantity\" must be greater than or equal to 1" }           
+    { "message": "\"quantity\" must be greater than or equal to 1" }
     ```
 </details>
 <br>
@@ -549,9 +549,9 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
     ```
     - sua API deve responder com status http `400` e o seguinte `body`:
     ```json
-      { "message": "\"productId\" is required" }           
+      { "message": "\"productId\" is required" }
     ```
-  
+
   > :point_right: será validado que o campo `quantity` está presente no body.
   - Quando a requisição é feita sem o atributo `quantity` :
     ```json
@@ -559,9 +559,9 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
     ```
     - sua API deve responder com status http `400` e o seguinte `body`:
     ```json
-      { "message": "\"quantity\" is required" }           
+      { "message": "\"quantity\" is required" }
     ```
-  
+
   - Quando a requisição é feita com o `quantity`  menor ou igual a 0:
     ```json
       [{ "productId": 1, "quantity": 0 }]
@@ -571,12 +571,12 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
     ```
     - sua API deve responder com status http `422` e o seguinte `body`:
     ```json
-    { "message": "\"quantity\" must be greater than or equal to 1" }           
+    { "message": "\"quantity\" must be greater than or equal to 1" }
     ```
 </details>
 
 ---
-  
+
 ### 4 - Crie um endpoint para o cadastro de produtos
 
 - O endpoint deve ser acessível através do caminho (`/products`);
@@ -818,7 +818,7 @@ Uma estratégia é pular todos os testes no início e ir implementando um teste 
 
   > :point_right: Para o endpoint `DELETE /sales/:id`, será validado que é possível deletar uma venda com sucesso.
   - sua API deve responder com status http `204` e sem nenhuma resposta no `body`.
-  
+
   > :point_right: Para o endpoint `DELETE /sales/:id`, será validado que não é possível deletar uma venda que não existe.
   - sua API deve responder com status http `404` e o seguinte `body`:
   ```json
